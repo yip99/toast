@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>toast</title>
+    <style>
+        .toasts-topLeft,
+        .toasts-bottomLeft {
+            left: 16px;
+        }
+
+        .toasts-topMiddle,
+        .toasts-bottomMiddle {
+            left: 0;
+        }
+
+        .toasts-topRight,
+        .toasts-bottomRight {
+            left: -16px;
+        }
+
+        .toasts-topLeft,
+        .toasts-topMiddle,
+        .toasts-topRight {
+            top: 16px;
+        }
+
+        .toasts-bottomLeft,
+        .toasts-bottomMiddle,
+        .toasts-bottomRight {
+            bottom: 16px;
+            justify-content: flex-end;
+        }
+
+        .toasts-topLeft,
+        .toasts-topMiddle,
+        .toasts-topRight,
+        .toasts-bottomLeft,
+        .toasts-bottomMiddle,
+        .toasts-bottomRight {
+            /* height: 100%; */
+            display: flex;
+            justify-content: flex-end;
+            flex-direction: column;
+            font-size: 14px;
+            position: fixed;
+            z-index: 4005;
+            width: 100%;
+            color: #515a6e;
+            pointer-events: none;
+            -webkit-font-smoothing: antialiased;
+            transition: height .3s ease-in-out;
+        }
+
+        .toasts-box-topLeft,
+        .toasts-box-bottomLeft {
+            padding: 7px;
+            overflow: hidden;
+            box-sizing: content-box;
+            text-align: left;
+            transition: height .3s ease-in-out, padding .3s ease-in-out
+        }
+
+        .toasts-box-topMiddle,
+        .toasts-box-bottomMiddle {
+            padding: 7px;
+            overflow: hidden;
+            box-sizing: content-box;
+            text-align: center;
+            transition: height .3s ease-in-out, padding .3s ease-in-out
+        }
+
+        .toasts-box-topRight,
+        .toasts-box-bottomRight {
+            padding: 7px;
+            overflow: hidden;
+            box-sizing: content-box;
+            text-align: right;
+            transition: height .3s ease-in-out, padding .3s ease-in-out
+        }
+
+        .toasts-message {
+            display: inline-block;
+            pointer-events: all;
+            padding: 8px 16px;
+            border-radius: 4px;
+            box-shadow: 0 1px 6px rgb(0 0 0 / 20%);
+            background: #fff;
+            position: relative
+        }
+
+        .toasts-message .toasts-content-text,
+        svg {
+            display: inline-block;
+            font-style: normal;
+            font-weight: 400;
+            font-variant: normal;
+            text-transform: none;
+            text-rendering: optimizeLegibility;
+            line-height: 1;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-align: center
+        }
+
+        .toasts-message svg {
+            width: 16px;
+            height: 16px;
+            margin-right: 4px;
+            vertical-align: middle
+        }
+
+        .toasts-message svg.toasts-btn {
+            cursor: pointer;
+            color: #999;
+            width: 14px;
+            height: 14px;
+            margin: 0;
+            margin-left: 10px
+        }
+
+        .toasts-message svg.toasts-btn:hover {
+            color: #444
+        }
+
+        svg.loading {
+            animation: loading 1.8s linear infinite
+        }
+
+        @-webkit-keyframes loading {
+            0% {
+                -webkit-transform: rotate(0)
+            }
+
+            50% {
+                -webkit-transform: rotate(180deg)
+            }
+
+            100% {
+                -webkit-transform: rotate(360deg)
+            }
+        }
+
+        @keyframes loading {
+            0% {
+                -webkit-transform: rotate(0)
+            }
+
+            50% {
+                -webkit-transform: rotate(180deg)
+            }
+
+            100% {
+                -webkit-transform: rotate(360deg)
+            }
+        }
+
+        .animate-animated {
+            --animate-duration: 0.4s
+        }
+
+        .animate-animated {
+            -webkit-animation-duration: 1s;
+            animation-duration: 1s;
+            -webkit-animation-duration: var(--animate-duration);
+            animation-duration: var(--animate-duration);
+            -webkit-animation-fill-mode: both;
+            animation-fill-mode: both
+        }
+
+        .animate-fadeOutUp {
+            -webkit-animation-name: fadeOutUp;
+            animation-name: fadeOutUp
+        }
+
+        @-webkit-keyframes fadeOutUp {
+            0% {
+                opacity: 1
+            }
+
+            to {
+                opacity: 0;
+                -webkit-transform: translate3d(0, -100%, 0);
+                transform: translate3d(0, -100%, 0)
+            }
+        }
+
+        @keyframes fadeOutUp {
+            0% {
+                opacity: 1
+            }
+
+            to {
+                opacity: 0;
+                -webkit-transform: translate3d(0, -100%, 0);
+                transform: translate3d(0, -100%, 0)
+            }
+        }
+
+        .animate-fadeInDown {
+            -webkit-animation-name: fadeInDown;
+            animation-name: fadeInDown
+        }
+
+        @-webkit-keyframes fadeInDown {
+            0% {
+                opacity: 0;
+                -webkit-transform: translate3d(0, -100%, 0);
+                transform: translate3d(0, -100%, 0)
+            }
+
+            to {
+                opacity: 1;
+                -webkit-transform: translateZ(0);
+                transform: translateZ(0)
+            }
+        }
+
+        @keyframes fadeInDown {
+            0% {
+                opacity: 0;
+                -webkit-transform: translate3d(0, -100%, 0);
+                transform: translate3d(0, -100%, 0)
+            }
+
+            to {
+                opacity: 1;
+                -webkit-transform: translateZ(0);
+                transform: translateZ(0)
+            }
+        }
+
+        .animate-fadeOutDown {
+            -webkit-animation-name: fadeOutDown;
+            animation-name: fadeOutDown
+        }
+
+        @-webkit-keyframes fadeOutDown {
+            0% {
+                opacity: 1
+            }
+
+            to {
+                opacity: 0;
+                -webkit-transform: translate3d(0, +100%, 0);
+                transform: translate3d(0, +100%, 0)
+            }
+        }
+
+        @keyframes fadeOutDown {
+            0% {
+                opacity: 1
+            }
+
+            to {
+                opacity: 0;
+                -webkit-transform: translate3d(0, +100%, 0);
+                transform: translate3d(0, +100%, 0)
+            }
+        }
+
+        .animate-fadeInUp {
+            -webkit-animation-name: fadeInUp;
+            animation-name: fadeInUp
+        }
+
+        @-webkit-keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                -webkit-transform: translate3d(0, +100%, 0);
+                transform: translate3d(0, +100%, 0);
+                /* max-height: 0px; */
+            }
+
+            to {
+                opacity: 1;
+                -webkit-transform: translateZ(0);
+                transform: translateZ(0);
+                /* max-height: 36px; */
+            }
+        }
+
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                -webkit-transform: translate3d(0, +100%, 0);
+                transform: translate3d(0, +100%, 0);
+                /* max-height: 0px; */
+            }
+
+            to {
+                opacity: 1;
+                -webkit-transform: translateZ(0);
+                transform: translateZ(0);
+                /* max-height: 36px; */
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <p>message: <input type="text" name="message" placeholder="content" value="message" /></p>
+    <p>duration: <input type="number" name="duration" placeholder="duration" value="2000" />ms</p>
+    <p>closeButton:<input type="checkbox" name="closeButton" checked /></p>
+    <p>reverseOrder:<input type="checkbox" name="reverseOrder" /></p>
+    <p>singleton:<input type="checkbox" name="singleton" /></p>
+    <hr>
+    <p>type</p>
+    <p><input type="radio" name="type" value="info" checked>info</p>
+    <p><input type="radio" name="type" value="success">success</p>
+    <p><input type="radio" name="type" value="warning">warning</p>
+    <p><input type="radio" name="type" value="error">error</p>
+    <p><input type="radio" name="type" value="loading">loading</p>
+    <hr>
+    <p>position</p>
+    <p><input type="radio" name="position" value="topLeft">topLeft</p>
+    <p><input type="radio" name="position" value="topMiddle">topMiddle</p>
+    <p><input type="radio" name="position" value="topRight">topRight</p>
+    <p><input type="radio" name="position" value="bottomLeft">bottomLeft</p>
+    <p><input type="radio" name="position" value="bottomMiddle" checked>bottomMiddle</p>
+    <p><input type="radio" name="position" value="bottomRight">bottomRight</p>
+    <p><button onclick="sendToast()">send toast</button></p>
+
+    <div class="toasts-topLeft" id="toasts-topLeft"></div>
+    <div class="toasts-topMiddle" id="toasts-topMiddle"></div>
+    <div class="toasts-topRight" id="toasts-topRight"></div>
+    <div class="toasts-bottomLeft" id="toasts-bottomLeft"></div>
+    <div class="toasts-bottomMiddle" id="toasts-bottomMiddle"></div>
+    <div class="toasts-bottomRight" id="toasts-bottomRight"></div>
+    <div class="popular-message"></div>
+    <script>
+        function getIcon(type) {
+            let icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            let iconPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+
+            switch (type) {
+                case 'info':
+                    icon.style.color = '#2db7f5';
+                    icon.setAttribute('fill', 'none');
+                    icon.setAttribute('viewBox', '0 0 24 24');
+                    icon.setAttribute('stroke', 'currentColor');
+                    iconPath.setAttribute('stroke-linecap', 'round');
+                    iconPath.setAttribute('stroke-linejoin', 'round');
+                    iconPath.setAttribute('stroke-width', '2');
+                    iconPath.setAttribute('d', 'M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z');
+                    break;
+                case 'success':
+                    icon.style.color = '#19be6b';
+                    icon.setAttribute('fill', 'currentColor');
+                    icon.setAttribute('viewBox', '0 0 20 20');
+                    iconPath.setAttribute('fill-rule', 'evenodd');
+                    iconPath.setAttribute('d', 'M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z');
+                    iconPath.setAttribute('clip-rule', 'evenodd');
+                    break;
+                case 'warning':
+                    icon.style.color = '#ff9900';
+                    icon.setAttribute('fill', 'none');
+                    icon.setAttribute('viewBox', '0 0 24 24');
+                    icon.setAttribute('stroke', 'currentColor');
+                    iconPath.setAttribute('stroke-linecap', 'round');
+                    iconPath.setAttribute('stroke-linejoin', 'round');
+                    iconPath.setAttribute('stroke-width', '2');
+                    iconPath.setAttribute('d', 'M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z');
+                    break;
+                case 'error':
+                    icon.style.color = '#ed4014';
+                    icon.setAttribute('viewBox', '0 0 20 20');
+                    icon.setAttribute('fill', 'currentColor');
+                    iconPath.setAttribute('fill-rule', 'evenodd');
+                    iconPath.setAttribute('d', 'M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z');
+                    iconPath.setAttribute('clip-rule', 'evenodd');
+                    break;
+                case 'loading':
+                    icon.style.color = '#2db7f5';
+                    icon.setAttribute('class', 'loading');
+                    icon.setAttribute('viewBox', '0 0 20 20');
+                    icon.setAttribute('fill', 'currentColor');
+                    iconPath.setAttribute('fill-rule', 'evenodd');
+                    iconPath.setAttribute('d', 'M9.504 1.132a1 1 0 01.992 0l1.75 1a1 1 0 11-.992 1.736L10 3.152l-1.254.716a1 1 0 11-.992-1.736l1.75-1zM5.618 4.504a1 1 0 01-.372 1.364L5.016 6l.23.132a1 1 0 11-.992 1.736L4 7.723V8a1 1 0 01-2 0V6a.996.996 0 01.52-.878l1.734-.99a1 1 0 011.364.372zm8.764 0a1 1 0 011.364-.372l1.733.99A1.002 1.002 0 0118 6v2a1 1 0 11-2 0v-.277l-.254.145a1 1 0 11-.992-1.736l.23-.132-.23-.132a1 1 0 01-.372-1.364zm-7 4a1 1 0 011.364-.372L10 8.848l1.254-.716a1 1 0 11.992 1.736L11 10.58V12a1 1 0 11-2 0v-1.42l-1.246-.712a1 1 0 01-.372-1.364zM3 11a1 1 0 011 1v1.42l1.246.712a1 1 0 11-.992 1.736l-1.75-1A1 1 0 012 14v-2a1 1 0 011-1zm14 0a1 1 0 011 1v2a1 1 0 01-.504.868l-1.75 1a1 1 0 11-.992-1.736L16 13.42V12a1 1 0 011-1zm-9.618 5.504a1 1 0 011.364-.372l.254.145V16a1 1 0 112 0v.277l.254-.145a1 1 0 11.992 1.736l-1.735.992a.995.995 0 01-1.022 0l-1.735-.992a1 1 0 01-.372-1.364z');
+                    iconPath.setAttribute('clip-rule', 'evenodd');
+                    break;
+                default:
+                    break;
+            }
+            icon.appendChild(iconPath);
+            return icon;
+        }
+
+        function toast({ type, text, duration, showCloseButton, position, singleton, reverseOrder }) {
+            let startTime;
+            type = type ?? 'info';
+            duration = duration ?? 2000;
+            showCloseButton = showCloseButton ?? true;
+            position = position ?? 'topMiddle';
+
+            let closeButton = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            closeButton.setAttribute('class', 'toasts-btn');
+            closeButton.setAttribute('fill', 'none');
+            closeButton.setAttribute('viewBox', '0 0 24 24');
+            closeButton.setAttribute('stroke', 'currentColor');
+
+            let closeButtonPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            closeButtonPath.setAttribute('stroke-linecap', 'round');
+            closeButtonPath.setAttribute('stroke-linejoin', 'round');
+            closeButtonPath.setAttribute('stroke-width', '2');
+            closeButtonPath.setAttribute('d', 'M6 18L18 6M6 6l12 12');
+            closeButton.appendChild(closeButtonPath);
+
+            const toast = document.createElement('div');
+            toast.className = `toasts-box-${position} animate-animated `;
+            switch (position) {
+                case 'topLeft':
+                case 'topMiddle':
+                case 'topRight':
+                    toast.className += 'animate-fadeInDown';
+                    break;
+                case 'bottomLeft':
+                case 'bottomMiddle':
+                case 'bottomRight':
+                    toast.className += 'animate-fadeInUp';
+                    break;
+                default:
+                    toast.className += 'animate-fadeInDown';
+                    break;
+            }
+            toast.style.height = "36px";
+            let message = document.createElement('div');
+            message.className = 'toasts-message';
+            let messageText = document.createElement('div');
+            messageText.className = 'toasts-content-text';
+            messageText.innerText = text;
+
+            message.appendChild(getIcon(type));
+            message.appendChild(messageText);
+            if (showCloseButton) {
+                message.appendChild(closeButton);
+            }
+            toast.appendChild(message);
+
+            let toasts = document.querySelector(`div[id="toasts-${position}"`);
+            if (singleton) {
+                document.querySelector(`div[id="toasts-${position}"]`).innerHTML = '';
+            }
+
+            if (reverseOrder) {
+                toasts.style['flex-direction'] = 'column-reverse';
+            } else {
+                toasts.style['flex-direction'] = 'column';
+            }
+
+            closeButton.onclick = () => {
+                toast.style.height = 0;
+                toast.style.padding = 0;
+                fadeout(toast, 0);
+                removeChild(toasts, toast, 0);
+            }
+            let moveUp = [
+                { transform: 'translate3d(0, +100%, 0)' },
+                { transform: 'translate3d(0, 0, 0)' }
+            ];
+            if (!reverseOrder && ['bottomLeft', 'bottomMiddle', 'bottomRight'].includes(position)) {
+                let child = document.querySelector(`div[id="toasts-${position}"]`).children;
+                // let child = document.querySelectorAll(`div[id="toasts-${position}"] > *`);
+                if (child) {
+                    for (let i = 0; i < child.length; i++) {
+                        child[i].animate(moveUp, { duration: 180 });
+                    }
+                }
+            }
+            toasts.appendChild(toast);
+            function fadeout(element, duration) {
+                let startTime;
+                function animate(timestamp) {
+                    frame = requestAnimationFrame(animate);
+                    if (startTime === undefined) {
+                        startTime = timestamp;
+                    }
+                    if (timestamp - startTime > duration) {
+                        element.style.height = 0;
+                        element.style.padding = 0;
+                        element.className = `toasts-box-${position} animate-animated `;
+                        switch (position) {
+                            case 'topLeft':
+                            case 'topMiddle':
+                            case 'topRight':
+                                toast.className += 'animate-fadeOutUp';
+                                break;
+                            case 'bottomLeft':
+                            case 'bottomMiddle':
+                            case 'bottomRight':
+                                toast.className += 'animate-fadeOutDown';
+                                break;
+                            default:
+                                toast.className += 'animate-fadeOutUp';
+                                break;
+                        }
+                        cancelAnimationFrame(frame);
+                    }
+                }
+                animate();
+            };
+            function removeChild(parent, child, duration) {
+                let startTime;
+                function animate(timestamp) {
+                    frame = requestAnimationFrame(animate);
+                    if (startTime === undefined) {
+                        startTime = timestamp;
+                    }
+                    if (timestamp - startTime > duration + 400) {
+                        // toasts.style.height = toasts.clientHeight - 50 + 'px';
+                        try {
+                            parent.removeChild(child);
+                        } catch (error) {
+
+                        }
+                        cancelAnimationFrame(frame);
+                    }
+                }
+                animate();
+            };
+            fadeout(toast, duration);
+            removeChild(toasts, toast, duration);
+        }
+        function sendToast() {
+            let text = document.querySelector('input[name="message"').value;
+            let duration = +document.querySelector('input[name="duration"').value;
+            let showCloseButton = document.querySelector('input[name="closeButton"').checked;
+            let type = document.querySelector('input[name="type"]:checked').value;
+            let position = document.querySelector('input[name="position"]:checked').value;
+            let singleton = document.querySelector('input[name="singleton"').checked;
+            let reverseOrder = document.querySelector('input[name="reverseOrder"').checked;
+            toast({
+                text,
+                duration,
+                showCloseButton,
+                type,
+                position,
+                singleton,
+                reverseOrder
+            });
+        }
+    </script>
+</body>
+
+</html>
